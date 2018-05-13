@@ -4,7 +4,6 @@ from flask import Flask, request, make_response, jsonify
 
 
 app = Flask(__name__)
-log = app.logger
 
 
 @app.route('/', methods=['POST'])
@@ -18,14 +17,14 @@ def webhook():
     except AttributeError:
         return 'json error'
 
-    if action == 'isValidDoctor':
+    '''if action == 'isValidDoctor':
         res = is_valid_doctor(req)
     else:
         log.error('Unexpected action.')
 
     print('Action: ' + action)
     print('Response: ' + res)
-
+    '''
     return make_response(jsonify({'fulfillmentText': 'res'}))
 
 
