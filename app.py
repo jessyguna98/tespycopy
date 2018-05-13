@@ -24,9 +24,16 @@ def webhook():
 
     print('Action: ' + action)
     print('Response: ' + res)
-    '''
+   
     return make_response(jsonify({'fulfillmentText': 'res'}))
-
+    '''
+    return {
+        "speech": speech,
+        "displayText": speech,
+        # "data": data,
+        # "contextOut": [],
+        "source": "apiai-weather-webhook-sample"
+    }
 
 def is_valid_doctor(req):
     """Returns a string containing text with a response to the user
