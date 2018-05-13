@@ -24,7 +24,7 @@ def webhook():
     This is meant to be used in conjunction with the weather Dialogflow agent
     """
     req = request.get_json(silent=True, force=True)
-    try:
+    '''try:
         action = req.get('queryResult').get('action')
     except AttributeError:
         return 'json error'
@@ -36,7 +36,8 @@ def webhook():
 
     print('Action: ' + action)
     print('Response: ' + res)
-   
+    '''
+    res='Gotcha!'
     return make_response(jsonify({'fulfillmentText': res}))
     
     
@@ -52,4 +53,4 @@ def is_valid_doctor(req):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False, port=port, host='0.0.0.0')
