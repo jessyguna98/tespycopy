@@ -26,7 +26,7 @@ def webhook():
     print('Action: ' + action)
     print('Response: ' + res)
 
-    return make_response(jsonify({'fulfillmentText': res}))
+    return make_response(jsonify({'fulfillmentText': 'res'}))
 
 
 def is_valid_doctor(req):
@@ -35,16 +35,6 @@ def is_valid_doctor(req):
     Takes the city for the forecast and (optional) dates
     uses the template responses found in weather_responses.py as templates
     """
-    parameters = req['queryResult']['parameters']
-
-    print('Dialogflow Parameters:')
-    print(json.dumps(parameters, indent=4))
-
-    # validate request parameters, return an error if there are issues
-    error, forecast_params = validate_params(parameters)
-    if error:
-        return error
-
     response = 'Bleah!'
     return response
 
