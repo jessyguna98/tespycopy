@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 
 
-@app.route('/', methods=['POST'])
+@app.route('/webhook', methods=['POST'])
 def webhook():
     """This method handles the http requests for the Dialogflow webhook
     This is meant to be used in conjunction with the weather Dialogflow agent
