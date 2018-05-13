@@ -37,9 +37,9 @@ def webhook():
     print('Action: ' + action)
     print('Response: ' + res)
     '''
-    #res='Gotcha!'
-    #return make_response(jsonify({'fulfillmentText': res}))
-    return req
+    res='Gotcha!'
+    return make_response(jsonify({'fulfillmentText': res}))
+    #return req
     
 
 def is_valid_doctor(req):
