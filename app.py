@@ -1,70 +1,53 @@
-# Python libraries that we need to import for our bot
-import random
-import os
-from flask import Flask, request
-from pymessenger.bot import Bot
+import json
+
+from flask import Flask, request, make_response, jsonify
+
 
 app = Flask(__name__)
-'''ACCESS_TOKEN = 'EAAYkZBveZBRS0BAJNEC79cdYJ50Eitmq9zjLDoo09PMP1y8I6oJVrZCWCsPQQJIwSbfZBqwZAbbIHlsmrbSozhTYYsBTGq0aa' \
-               'xJMQIjzIBDvbsb0VEh0WccKgDhx7ObReBcdqEjX86PqTJxrfFwCobFDkRkZBvZAZCH86xc8pkyzTQZDZD'
-
-VERIFY_TOKEN = 'TESTINGtesting%123' '''
-
-ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
-
-bot = Bot(ACCESS_TOKEN)
+log = app.logger
 
 
-# We will receive messages that Facebook sends our bot at this endpoint
-@app.route("/", methods=['GET', 'POST'])
-def receive_message():
-    if request.method == 'GET':
+@app.route('/', methods=['POST'])
+def webhook():
+    """This method handles the http requests for the Dialogflow webhook
+    This is meant to be used in conjunction with the weather Dialogflow agent
+    """
+    req = request.get_json(silent=True, force=True)
+    try:
+        action = req.get('queryResult').get('action')
+    except AttributeError:
+        return 'json error'
 
-        token_sent = request.args.get("hub.verify_token")
-        return verify_fb_token(token_sent)
-    # if the request was not get, it must be POST and we can just proceed with sending a message back to user
+    if action == 'isValidDoctor':
+        res = is_valid_doctor(req)
     else:
-        # get whatever message a user sent the bot
-        output = request.get_json()
-        for event in output['entry']:
-            messaging = event['messaging']
-            for message in messaging:
-                if message.get('message'):
-                    # Facebook Messenger ID for user so we know where to send response back to
-                    recipient_id = message['sender']['id']
-                    if message['message'].get('text'):
-                        response_sent_text = get_message()
-                        send_message(recipient_id, response_sent_text)
-                    # if user sends us a GIF, photo,video, or any other non-text item
-                    if message['message'].get('attachments'):
-                        response_sent_nontext = get_message()
-                        send_message(recipient_id, response_sent_nontext)
-    return "Message Processed"
+        log.error('Unexpected action.')
+
+    print('Action: ' + action)
+    print('Response: ' + res)
+
+    return make_response(jsonify({'fulfillmentText': res}))
 
 
-def verify_fb_token(token_sent):
-    # take token sent by facebook and verify it matches the verify token you sent
-    # if they match, allow the request, else return an error
-    if token_sent == VERIFY_TOKEN:
-        return request.args.get("hub.challenge")
-    return 'Invalid verification token'
+def is_valid_doctor(req):
+    """Returns a string containing text with a response to the user
+    with the weather forecast or a prompt for more information
+    Takes the city for the forecast and (optional) dates
+    uses the template responses found in weather_responses.py as templates
+    """
+    parameters = req['queryResult']['parameters']
+
+    print('Dialogflow Parameters:')
+    print(json.dumps(parameters, indent=4))
+
+    # validate request parameters, return an error if there are issues
+    error, forecast_params = validate_params(parameters)
+    if error:
+        return error
+
+    response = 'Bleah!'
+    return response
 
 
-# chooses a random message to send to the user
-def get_message():
-    sample_responses = ["You are stunning!", "We're proud of you.", "Keep on being you!",
-                        "We're grateful to know you :)", "Hola!", "Hey!"]
-    # return selected item to the user
-    return random.choice(sample_responses)
-
-
-# uses PyMessenger to send response to user
-def send_message(recipient_id, response):
-    # sends user the text message provided via input response parameter
-    bot.send_text_message(recipient_id, response)
-    return "success"
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
