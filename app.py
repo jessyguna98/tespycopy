@@ -23,12 +23,12 @@ def webhook():
     """This method handles the http requests for the Dialogflow webhook
     This is meant to be used in conjunction with the weather Dialogflow agent
     """
-    '''req = request.get_json(silent=True, force=True)
+    req = request.get_json(silent=True, force=True)
     try:
         action = req.get('queryResult').get('action')
     except AttributeError:
         return 'json error'
-
+    '''
     if action == 'isValidDoctor':
         res = is_valid_doctor(req)
     else:
@@ -36,11 +36,18 @@ def webhook():
 
     print('Action: ' + action)
     print('Response: ' + res)
-    '''
+    
     res='Gotcha!'
     return make_response(jsonify({'fulfillmentText': res}))
+    '''
     #return req
+    res = {'fulfillmentText': 'output','outputContexts': req['queryResult']['outputContexts']}
     
+        # If the request is not to the translate.text action throw an error
+    #log.error('Unexpected action requested: %s', json.dumps(req))
+    #res = {'speech': 'error', 'displayText': 'error'}
+
+    return make_response(jsonify(res))
 
 '''def is_valid_doctor(req):
     """Returns a string containing text with a response to the user
