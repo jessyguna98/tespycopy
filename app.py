@@ -19,11 +19,11 @@ def webhook():
     
     res = "Hurray!"
     
-    """if action == 'isValidDoctor':
+    if action == 'isValidDoctor':
         res = is_valid_doctor(req)
-    #else:
-    #    log.error('Unexpected action.')
-    """
+    else:
+        log.error('Unexpected action.')
+    
     print('Action: ' + action)
     print('Response: ' + res)
     
