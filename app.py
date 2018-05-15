@@ -41,7 +41,7 @@ def webhook():
     return make_response(jsonify({'fulfillmentText': res}))
     '''
     #return req
-    res = {'fulfillmentText': 'output','outputContexts': req['queryResult']['outputContexts']}
+    res = {"fulfillmentText": "output"}
     
         # If the request is not to the translate.text action throw an error
     #log.error('Unexpected action requested: %s', json.dumps(req))
