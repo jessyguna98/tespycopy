@@ -16,13 +16,14 @@ def webhook():
         action = req.get('queryResult').get('action')
     except AttributeError:
         return 'json error'
+    
     res = "Hurray!"
     
-    if action == 'isValidDoctor':
+    """if action == 'isValidDoctor':
         res = is_valid_doctor(req)
     #else:
     #    log.error('Unexpected action.')
-
+    """
     print('Action: ' + action)
     print('Response: ' + res)
     
