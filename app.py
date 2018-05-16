@@ -18,7 +18,7 @@ def webhook():
     except AttributeError:
         return 'json error'
     
-    res = "Hurray!"
+    #res = "Hurray!"
     
     if action == 'isValidDoctor':
         res = is_valid_doctor(req)
@@ -45,8 +45,9 @@ def is_valid_doctor(req):
     cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
     if len(rows) >0:
-        response = "Successfully booked an appointment with Dr."+doctor_name
+        response = "Successfully booked an appointment"# Dr."+doctor_name
     conn.close()
+    
     return response
 
 
