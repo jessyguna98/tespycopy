@@ -43,7 +43,7 @@ def is_valid_doctor(req):
     
     cur = conn.cursor()
     response = "Sorry! I couldn't find any doctor with that name."
-    cur.execute("SELECT doc_name from doc_list where doc_name ='", doctor_name,"';")
+    cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
     if len(rows) >0:
         response = "Successfully booked an appointment with Dr."+doctor_name
