@@ -1,5 +1,6 @@
 import json
 from flask import Flask, request, make_response, jsonify
+import psycopg2
 
 # Flask app should start in global layout
 app = Flask(__name__)
@@ -35,7 +36,18 @@ def is_valid_doctor(req):
     Takes the city for the forecast and (optional) dates
     uses the template responses found in weather_responses.py as templates
     """
-    response = "Bleah!"
+    
+    doctor_name = req.geet('queryResult').get('parameters').get('doctor_name')
+    conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com
+", port = "5432")
+    
+    cur = conn.cursor()
+    response = "Sorry! I couldn't find any doctor with that name."
+    cur.execute("SELECT doc_name from doc_list where doc_name ='", doctor_name,"';")
+    rows = cur.fetchall()
+    if len(rows) >0:
+        response = "Successfully booked an appointment with Dr."+doctor_name
+    conn.close()
     return response
 
 
