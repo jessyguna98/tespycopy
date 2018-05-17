@@ -49,6 +49,7 @@ def is_valid_doctor(req):
     cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
     if len(rows) ==1:
+        cur.execute("INSERT INTO Appointments values('"+doctor_name+"', '"+date+"')")
         response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
     elif len(rows)>1:
         for row in rows:
