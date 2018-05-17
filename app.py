@@ -17,26 +17,26 @@ def webhook():
         action = req.get('queryResult').get('action')
     except AttributeError:
         return 'json error'
-    
+
     #res = "Hurray!"
-    
+
     if action == 'isValidDoctor':
         res = is_valid_doctor(req)
     else:
         log.error('Unexpected action.')
-    
+
     print('Action: ' + action)
     print('Response: ' + res)
-    
+
     return make_response(jsonify({'fulfillmentText': res}))
-    
+
 def is_valid_doctor(req):
     """Returns a string containing text with a response to the user
     with the weather forecast or a prompt for more information
     Takes the city for the forecast and (optional) dates
     uses the template responses found in weather_responses.py as templates
     """
-    
+
     doctor_name = req['queryResult']['parameters']['doctor_name']
     doctor_name = ''.join(doctor_name)
     doctor_name = doctor_name.strip().title()
@@ -47,14 +47,14 @@ def is_valid_doctor(req):
     cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
     if len(rows) ==1:
-        response = "Successfully booked an appointment with " +doctor_name
+        response = "Successfully booked an appointment with Dr. " +doctor_name
     elif len(rows)>1:
         for row in rows:
             response = response + row[0] + "\n"
     else:
         response = "Sorry! I couldn't find any doctor with that name."
     conn.close()
-    
+
     return response
 
 
