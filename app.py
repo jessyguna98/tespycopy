@@ -47,7 +47,7 @@ def is_valid_doctor(req):
     cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
     if len(rows) ==1:
-        response = "Successfully booked an appointment"# Dr."+doctor_name
+        response = "Successfully booked an appointment with " +doctor_name
     elif len(rows)>1:
         for row in rows:
             response = response + row[0] + "\n"
