@@ -45,11 +45,12 @@ def is_valid_doctor(req):
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
 
     cur = conn.cursor()
+    cur2 = conn.cursor()
     response = "Results: \n"
     cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
     if len(rows) ==1:
-        cur.execute("INSERT INTO Appointments values('"+doctor_name+"', '"+date+"')")
+        cur2.execute("INSERT INTO Appointments values('"+doctor_name+"', '"+date+"')")
         response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
     elif len(rows)>1:
         for row in rows:
