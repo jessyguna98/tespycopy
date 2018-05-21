@@ -38,7 +38,7 @@ def is_valid_doctor(req):
     """
 
     date = req['queryResult']['parameters']['date']
-    date = date[:10]
+    date = date[:9]
     doctor_name = req['queryResult']['parameters']['doctor_name']
     doctor_name = ''.join(doctor_name)
     doctor_name = doctor_name.strip().title()
