@@ -62,10 +62,10 @@ def is_valid_doctor(req):
     elif len(rows)>1:
         for row in rows:
             response = response + row[0] + "\n"
-    else:
+    elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
 
-    # conn.close()
+    conn.close()
     return response
 
 
