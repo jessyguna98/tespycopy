@@ -1,6 +1,7 @@
 import json
 from flask import Flask, request, make_response, jsonify
 import psycopg2
+from datetime import datetime
 
 # Flask app should start in global layout
 app = Flask(__name__)
@@ -41,9 +42,18 @@ def is_valid_doctor(req):
     date = ''.join(date)
     date = date[:10]
 
+    d1 = datetime.strptime(date, '%Y-%m-%d')
+    day_string = d1.strftime('%Y-%m-%d')
+
+    now = datetime.datetime.now()
+    d2 = datetime.strptime(date, '%Y-%m-%d')
+
+
+
     doctor_name = req['queryResult']['parameters']['doctor_name']
     doctor_name = ''.join(doctor_name)
     doctor_name = doctor_name.strip().title()
+
 
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
 
@@ -58,10 +68,12 @@ def is_valid_doctor(req):
 
 
     if len(rows) ==1:
+        if d2>d1:
+            cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
+            response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
+        else:
+            response = "Invalid date to book an appointment"
 
-        cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
-
-        response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
     elif len(rows)>1:
         for row in rows:
             response = response + row[0] + "\n"
