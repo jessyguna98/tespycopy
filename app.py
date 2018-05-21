@@ -38,15 +38,15 @@ def is_valid_doctor(req):
     uses the template responses found in weather_responses.py as templates
     """
 
-    date = req['queryResult']['parameters']['date']
-    date = ''.join(date)
-    date = date[:10]
+    date1 = req['queryResult']['parameters']['date']
+    date1 = ''.join(date)
+    date1 = date1[:10]
 
-    d1 = datetime.strptime(date, '%Y-%m-%d')
-    day_string = d1.strftime('%Y-%m-%d')
+    d1 = datetime.strptime(date1, '%Y-%m-%d')
+    # day_string = d1.strftime('%Y-%m-%d')
 
     now = datetime.datetime.now()
-    d2 = datetime.strptime(date, '%Y-%m-%d')
+    d2 = datetime.strptime(now, '%Y-%m-%d')
 
 
 
