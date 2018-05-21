@@ -68,11 +68,14 @@ def is_valid_doctor(req):
 
 
     if len(rows) ==1:
-        if d1>d2:
-            cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
-            response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
-        else:
-            response = "Invalid date to book an appointment"
+        cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
+        response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
+
+        # if d1>d2:
+        #     cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
+        #     response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
+        # else:
+        #     response = "Invalid date to book an appointment"
 
     elif len(rows)>1:
         for row in rows:
