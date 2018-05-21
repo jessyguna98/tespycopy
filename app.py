@@ -43,18 +43,20 @@ def is_valid_doctor(req):
     doctor_name = ''.join(doctor_name)
     doctor_name = doctor_name.strip().title()
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
-    conn2 = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
 
     cur = conn.cursor()
-    cur2 = conn2.cursor()
     response = "Results: \n"
 
     cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
+    conn.close()
 
     if len(rows) ==1:
-        # cur2.execute("INSERT INTO Appointments values(%s,%s)", (doctor_name,date))
-        cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30')
+
+        # conn2 = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
+        # cur2 = conn2.cursor()
+        # cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30')
+        # conn2.close()
 
         response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
     elif len(rows)>1:
@@ -63,8 +65,7 @@ def is_valid_doctor(req):
     else:
         response = "Sorry! I couldn't find any doctor with that name."
 
-    conn.close()
-    conn2.close()
+    # conn.close()
     return response
 
 
