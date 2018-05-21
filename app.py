@@ -1,7 +1,7 @@
 import json
 from flask import Flask, request, make_response, jsonify
 import psycopg2
-from datetime import datetime
+#from datetime import datetime
 
 # Flask app should start in global layout
 app = Flask(__name__)
@@ -42,11 +42,11 @@ def is_valid_doctor(req):
     date1 = ''.join(date1)
     date1 = date1[:10]
 
-    d1 = datetime.strptime(date1, '%Y-%m-%d')
-    # day_string = d1.strftime('%Y-%m-%d')
-
-    now = datetime.now()
-    d2 = datetime.strptime(now, '%Y-%m-%d')
+    # d1 = datetime.strptime(date1, '%Y-%m-%d')
+    # # day_string = d1.strftime('%Y-%m-%d')
+    #
+    # now = datetime.now()
+    # d2 = datetime.strptime(now, '%Y-%m-%d')
 
 
 
@@ -68,15 +68,15 @@ def is_valid_doctor(req):
 
 
     if len(rows) ==1:
-        # cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
-        # response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date1
+        cur2.execute("INSERT INTO Appointments values('Zxcvb','2018-06-30');")
+        response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date1
 
-        if d1>d2:
-            cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
-            # cur2.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date1+" ');")
-            response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date1
-        else:
-            response = "Invalid date to book an appointment"
+        # if d1>d2:
+        #     cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
+        #     # cur2.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date1+" ');")
+        #     response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date1
+        # else:
+        #     response = "Invalid date to book an appointment"
 
     elif len(rows)>1:
         for row in rows:
