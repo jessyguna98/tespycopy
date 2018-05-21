@@ -45,7 +45,7 @@ def is_valid_doctor(req):
     d1 = datetime.strptime(date1, '%Y-%m-%d')
     # day_string = d1.strftime('%Y-%m-%d')
 
-    now = datetime.datetime.now()
+    now = datetime.now()
     d2 = datetime.strptime(now, '%Y-%m-%d')
 
 
@@ -68,7 +68,7 @@ def is_valid_doctor(req):
 
 
     if len(rows) ==1:
-        if d2>d1:
+        if d1>d2:
             cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
             response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
         else:
