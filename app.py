@@ -72,7 +72,7 @@ def is_valid_doctor(req):
         # response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date1
 
         if d1>d2:
-            cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
+            cur2.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date1+" ');")
             response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date1
         else:
             response = "Invalid date to book an appointment"
