@@ -49,7 +49,7 @@ def is_valid_doctor(req):
 
     cur.execute("SELECT doc_name from doc_list where doc_name ='"+ doctor_name+"'")
     rows = cur.fetchall()
-    conn.close()
+    # conn.close()
 
     if len(rows) ==1:
 
