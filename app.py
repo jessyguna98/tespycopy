@@ -37,8 +37,8 @@ def is_valid_doctor(req):
     uses the template responses found in weather_responses.py as templates
     """
 
-    date = req['queryResult']['parameters']['date']
-    date = date[:9]
+    # date = req['queryResult']['parameters']['date']
+    # date = date[:9]
     doctor_name = req['queryResult']['parameters']['doctor_name']
     doctor_name = ''.join(doctor_name)
     doctor_name = doctor_name.strip().title()
@@ -59,7 +59,7 @@ def is_valid_doctor(req):
         # cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30')
         # conn2.close()
 
-        response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date
+        response = "Successfully booked an appointment with Dr. " +doctor_name#+ " on " +date
     elif len(rows)>1:
         for row in rows:
             response = response + row[0] + "\n"
