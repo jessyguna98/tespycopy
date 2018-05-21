@@ -68,6 +68,7 @@ def is_valid_doctor(req):
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
 
+    conn2.commit()
     conn2.close()
     conn.close()
     return response
