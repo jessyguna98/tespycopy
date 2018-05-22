@@ -79,9 +79,9 @@ def is_valid_doctor(req):
 
     elif len(rows)>1:
         for row in rows:
-            #dept_cursor.execute( "SELECT department_name from department where department_id = ' "+row[1]+" '  ;" )
-            #dept_list = dept_cursor.fetchall()
-            response = response + "Dr." + str(row) + ", "# + str(dept_list[0])
+            dept_cursor.execute( "SELECT department_name from department where department_id = ' "+ str(row[1])+" '  ;" )
+            dept_list = dept_cursor.fetchall()
+            response = response + "Dr." + row[0] + ", " + str(dept_list[0])
 
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
