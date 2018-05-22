@@ -32,7 +32,7 @@ def webhook():
     return make_response(jsonify({'fulfillmentText': res}))
 
 def is_valid_doctor(req):
-
+    
     date1 = req['queryResult']['parameters']['date']
     date1 = ''.join(date1)
     date1 = date1[:10]
