@@ -10,6 +10,7 @@ log = app.logger
 
 @app.route('/', methods=['POST'])
 def webhook():
+
     """This method handles the http requests for the Dialogflow webhook
     This is meant to be used in conjunction with the weather Dialogflow agent
     """
@@ -32,11 +33,6 @@ def webhook():
     return make_response(jsonify({'fulfillmentText': res}))
 
 def is_valid_doctor(req):
-    """Returns a string containing text with a response to the user
-    with the weather forecast or a prompt for more information
-    Takes the city for the forecast and (optional) dates
-    uses the template responses found in weather_responses.py as templates
-    """
 
     date1 = req['queryResult']['parameters']['date']
     date1 = ''.join(date1)
@@ -58,9 +54,10 @@ def is_valid_doctor(req):
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
 
     cur = conn.cursor()
-    response = "Results: \n"
+    # dept_cursor = conn.cursor()
+    response = "Found these results: \n"
 
-    cur.execute("SELECT doc_name from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
+    cur.execute("SELECT doc_name, department_id from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
     rows = cur.fetchall()
     # conn.close()
     conn2 = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
@@ -81,7 +78,10 @@ def is_valid_doctor(req):
 
     elif len(rows)>1:
         for row in rows:
-            response = response + row[0] + "\n"
+            # dept_cursor.execute( "SELECT department_name from department where department_id = ' "+row[1]+" '  " )
+            # dept_list = dept_cursor.fetchall()
+            response = response + "Dr." + row[0] + ", " #+ str(dept_list[0])
+
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
 
@@ -92,4 +92,4 @@ def is_valid_doctor(req):
 
 
 if __name__ == '__main__':
-app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
