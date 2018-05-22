@@ -58,7 +58,7 @@ def is_valid_doctor(req):
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
 
     cur = conn.cursor()
-    response = "Results: \n"
+    response = "Found these results: \n"
 
     cur.execute("SELECT doc_name from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
     rows = cur.fetchall()
@@ -81,7 +81,7 @@ def is_valid_doctor(req):
 
     elif len(rows)>1:
         for row in rows:
-            response = response + row[0] + "\n"
+            response = response + "Dr." + row[0] + ", "
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
 
