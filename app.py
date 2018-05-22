@@ -51,9 +51,10 @@ def is_valid_doctor(req):
 
 
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
+    dept_conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
 
     cur = conn.cursor()
-    dept_cursor = conn.cursor()
+    dept_cursor = dept_conn.cursor()
     response = "Found these results: \n"
 
     cur.execute("SELECT doc_name, department_id from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
@@ -86,6 +87,8 @@ def is_valid_doctor(req):
     conn2.commit()
     conn2.close()
     conn.close()
+    dept_conn.close()
+
     return response
 
 
