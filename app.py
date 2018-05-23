@@ -52,15 +52,15 @@ def is_valid_doctor(req):
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
 
     cur = conn.cursor()
-    
+
     dept_cursor = conn.cursor()
-    
+
     response = "Found these results: \n"
 
     cur.execute("SELECT doc_name, department_id from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
     rows = cur.fetchall()
     #conn.close()
-    
+
     conn2 = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
     cur2 = conn2.cursor()
 
@@ -81,7 +81,7 @@ def is_valid_doctor(req):
         for row in rows:
             dept_cursor.execute( "SELECT department_name from department where department_id = '"+str(row[1])+"' ;" )
             dept_list = dept_cursor.fetchall()
-            response = response + "Dr." + str(row[0]) + " of " + dept_list[0][0] + ", "
+            response = response + "Dr." + str(row[0]) + " of " + dept_list[0][0] + ",<br> "
 
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
