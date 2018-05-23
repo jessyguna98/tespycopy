@@ -32,7 +32,7 @@ def webhook():
     print('Response: ' + res)
 
     # req['queryResult']['outputContexts']['name'] = outputContexts
-    return make_response(jsonify({'fulfillmentText': res,'outputContexts':req['queryResult']['outputContexts']}))
+    return make_response(jsonify({'fulfillmentText': res,'outputContexts': [{'name': "chooseDoctor"}] }))
 
 def is_valid_doctor(req):
 
@@ -55,6 +55,7 @@ def is_valid_doctor(req):
 
 
     doctor_name = doctor_name.strip().title()
+
     doctor_name = doctor_name.replace("Dr. ","")
     doctor_name = doctor_name.replace("dr ","")
     doctor_name = doctor_name.replace("Dr ","")
