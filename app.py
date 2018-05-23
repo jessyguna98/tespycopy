@@ -20,18 +20,20 @@ def webhook():
     except AttributeError:
         return 'json error'
 
+    outputContexts = ""
     if action == 'isValidDoctor':
-        res = is_valid_doctor(req)
+        res, outputContexts = is_valid_doctor(req)
     else:
         log.error('Unexpected action.')
 
     print('Action: ' + action)
     print('Response: ' + res)
 
-    return make_response(jsonify({'fulfillmentText': res}))
+    return make_response(jsonify({'fulfillmentText': res,'outputContexts':[{'name': outputContexts}]}))
 
 def is_valid_doctor(req):
 
+    outputContexts=""
     date1 = req['queryResult']['parameters']['date']
     date1 = ''.join(date1)
     date1 = date1[:10]
@@ -85,7 +87,8 @@ def is_valid_doctor(req):
             dept_list = dept_cursor.fetchall()
             response = response + "Dr." + str(row[0]) + " of " + dept_list[0][0] + ",\n"
 
-        return make_response(jsonify({'fulfillmentText': response,'outputContexts':[{'name': "chooseDoctor"}]}))
+        outputContexts = "chooseDoctor"
+        # return make_response(jsonify({'fulfillmentText': response,'outputContexts':[{'name': "chooseDoctor"}]}))
 
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
@@ -93,7 +96,7 @@ def is_valid_doctor(req):
     conn.commit()
     # conn2.close()
     conn.close()
-    return response
+    return response,outputContexts
 
 
 if __name__ == '__main__':
