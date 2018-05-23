@@ -85,6 +85,8 @@ def is_valid_doctor(req):
             dept_list = dept_cursor.fetchall()
             response = response + "Dr." + str(row[0]) + " of " + dept_list[0][0] + ",\n"
 
+        return make_response(jsonify({'fulfillmentText': response,'outputContexts':[{'name': "chooseDoctor"}]}))
+
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
 
