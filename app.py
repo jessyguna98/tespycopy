@@ -36,7 +36,8 @@ def webhook():
 
 def is_valid_doctor(req):
 
-    outputContexts = req['queryResult']['outputContexts']['name']
+    outputContexts=""
+    # outputContexts = req['queryResult']['outputContexts']['name']
 
     date1 = req['queryResult']['parameters']['date']
     date1 = ''.join(date1)
