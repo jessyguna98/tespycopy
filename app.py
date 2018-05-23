@@ -81,7 +81,7 @@ def is_valid_doctor(req):
         for row in rows:
             dept_cursor.execute( "SELECT department_name from department where department_id = '"+str(row[1])+"' ;" )
             dept_list = dept_cursor.fetchall()
-            response = response + "Dr." + str(row[0]) + " of " + dept_list[0][0] + ",<br> "
+            response = response + "Dr." + str(row[0]) + " of " + dept_list[0][0] + ",\n"
 
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
