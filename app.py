@@ -23,7 +23,7 @@ def webhook():
     outputContexts = ""
     if action == 'isValidDoctor':
         res, outputContexts = is_valid_doctor(req)
-        req['queryResult']['outputContexts']['name'] = outputContexts
+        # req['queryResult']['outputContexts']['name'] = outputContexts
     elif action == 'SelectDoctor':
         res = "Hurray!"
 
