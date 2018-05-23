@@ -58,7 +58,7 @@ def select_doctor(req):
     rows = select_cur.fetchall()
 
     for row in rows:
-        doctor_list.append(str(row[0])
+        doctor_list.append(str(row[0]))
 
     if doctor_number > len (doctor_list):
         response = "Invalid Choice!"
@@ -75,6 +75,7 @@ def select_doctor(req):
         cur.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date_of_app+" ');")
         response = "Successfully booked!"
 
+    conn.commit()
     conn.close()
     return response
 
