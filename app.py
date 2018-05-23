@@ -21,11 +21,15 @@ def webhook():
         return 'json error'
 
     outputContexts = ""
+    global_doctor_list=[]
+
+
     if action == 'isValidDoctor':
-        res, outputContexts = is_valid_doctor(req)
+        res, outputContexts = is_valid_doctor(req,global_doctor_list)
         # req['queryResult']['outputContexts']['name'] = outputContexts
+
     elif action == 'SelectDoctor':
-        res = "Hurray!"
+        res = select_doctor(req,global_doctor_list)
 
     else:
         log.error('Unexpected action.')
@@ -38,7 +42,32 @@ def webhook():
                         #,'outputContexts': [{'name': "chooseDoctor"}]
 
 
-def is_valid_doctor(req):
+
+def select_doctor(req,global_doctor_list):
+
+    doctor_number = req['queryResult']['parameters']['number-integer']
+    # doctor_number = doctor_number - 1
+
+    if doctor_number > len (global_doctor_list):
+        response = "Invalid Choice!"
+
+    else:
+        doctor_number = doctor_number - 1
+        doctor_name = global_doctor_list[doctor_number]
+
+        date_of_app = req['outputContexts']['date']
+        date_of_app = ''.join(date_of_app)
+        date_of_app = date_of_app[:10]
+
+
+        conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
+        cur = conn.cursor()
+        cur.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date_of_app+" ');")
+        response = "Successfully booked!"
+        conn.close()
+    return response
+
+def is_valid_doctor(req,global_doctor_list):
 
     outputContexts=""
     # outputContexts = req['queryResult']['outputContexts']['name']
@@ -71,7 +100,7 @@ def is_valid_doctor(req):
 
     dept_cursor = conn.cursor()
 
-    response = "Found these results: \n"
+    response = "Found these results: \nWhich Doctor where you looking for?\n"
 
     cur.execute("SELECT doc_name, department_id from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
     rows = cur.fetchall()
@@ -94,11 +123,16 @@ def is_valid_doctor(req):
         #     response = "Invalid date to book an appointment"
 
     elif len(rows)>1:
+        doctor_number=0                     #For the user to select from list of doctors
+
         for row in rows:
+            doctor_number+=1
             dept_cursor.execute( "SELECT department_name from department where department_id = '"+str(row[1])+"' ;" )
             dept_list = dept_cursor.fetchall()
-            response = response + "Dr." + str(row[0]) + " of " + dept_list[0][0] + ",\n"
+            response = response + str(doctor_number)  + ". Dr." + str(row[0]) + " of " + dept_list[0][0] + ",\n"
+            global_doctor_list.append(row[0])
 
+        response += "\n Please Choose by Number"
         outputContexts = "chooseDoctor"
         # return make_response(jsonify({'fulfillmentText': response,'outputContexts':[{'name': "chooseDoctor"}]}))
 
