@@ -23,7 +23,9 @@ def webhook():
     outputContexts = ""
     if action == 'isValidDoctor':
         res, outputContexts = is_valid_doctor(req)
-        # req['queryResult']['outputContexts']['name'] = outputContexts
+        req['queryResult']['outputContexts']['name'] = outputContexts
+    elif action == 'SelectDoctor':
+        res = "Hurray!"
 
     else:
         log.error('Unexpected action.')
@@ -32,7 +34,7 @@ def webhook():
     print('Response: ' + res)
 
     # req['queryResult']['outputContexts']['name'] = outputContexts
-    return make_response(jsonify({'fulfillmentText': res}))
+    return make_response(jsonify({'fulfillmentText': res, 'outputContexts':req['queryResult']['outputContexts']}))
                         #,'outputContexts': [{'name': "chooseDoctor"}]
 
 
