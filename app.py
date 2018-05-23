@@ -46,6 +46,8 @@ def is_valid_doctor(req):
 
     doctor_name = req['queryResult']['parameters']['doctor_name']
     doctor_name = ''.join(doctor_name)
+
+
     doctor_name = doctor_name.strip().title()
 
 
@@ -61,8 +63,8 @@ def is_valid_doctor(req):
     rows = cur.fetchall()
     #conn.close()
 
-    conn2 = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
-    cur2 = conn2.cursor()
+    # conn2 = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
+    cur2 = conn.cursor()
 
 
     if len(rows) ==1:
@@ -86,8 +88,8 @@ def is_valid_doctor(req):
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
 
-    conn2.commit()
-    conn2.close()
+    conn.commit()
+    # conn2.close()
     conn.close()
     return response
 
