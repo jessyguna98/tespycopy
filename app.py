@@ -65,7 +65,7 @@ def select_doctor(req):
 
     else:
         doctor_number = doctor_number - 1
-        doctor_name = doctor_list[1]
+        doctor_name = doctor_list[doctor_number]
 
         date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date']
         date_of_app = ''.join(date_of_app)
