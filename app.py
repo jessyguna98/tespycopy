@@ -58,14 +58,14 @@ def select_doctor(req):
     rows = select_cur.fetchall()
 
     for row in rows:
-        doctor_list.append(row[0])
+        doctor_list.append(str(row[0])
 
     if doctor_number > len (doctor_list):
         response = "Invalid Choice!"
 
     else:
         doctor_number = doctor_number - 1
-        doctor_name = doctor_list[doctor_number]
+        doctor_name = doctor_list[1]
 
         date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date']
         date_of_app = ''.join(date_of_app)
