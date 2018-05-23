@@ -50,7 +50,7 @@ def select_doctor(req):
     select_cur = conn.cursor()
 
     doctor_name = req['queryResult']['outputContexts'][0]['parameters']['doctor_name']
-    doctor_number = req['queryResult']['parameters']['number-integer']
+    doctor_number = int(req['queryResult']['parameters']['number-integer'])
     # doctor_number = doctor_number - 1
 
 
@@ -60,10 +60,10 @@ def select_doctor(req):
     for row in rows:
         doctor_list.append(str(row[0]))
 
-    if doctor_number > len (doctor_list):
-        response = "Invalid Choice!"
 
-    else:
+    response = "Invalid Choice!"
+
+    if doctor_number > 0 and doctor_number <= len (doctor_list):
         doctor_number = doctor_number - 1
         doctor_name = doctor_list[doctor_number]
 
