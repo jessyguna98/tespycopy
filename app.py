@@ -49,7 +49,7 @@ def select_doctor(req):
     cur = conn.cursor()
     select_cur = conn.cursor()
 
-    doctor_name = req['outputContexts']['doctor_name']
+    doctor_name = req['queryResult']['outputContexts'][0]['parameters']['doctor_name']
     doctor_number = req['queryResult']['parameters']['number-integer']
     # doctor_number = doctor_number - 1
 
@@ -67,14 +67,15 @@ def select_doctor(req):
         doctor_number = doctor_number - 1
         doctor_name = doctor_list[doctor_number]
 
-        date_of_app = req['outputContexts']['date']
+        date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date']
         date_of_app = ''.join(date_of_app)
         date_of_app = date_of_app[:10]
 
 
         cur.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date_of_app+" ');")
         response = "Successfully booked!"
-        conn.close()
+
+    conn.close()
     return response
 
 def is_valid_doctor(req):
