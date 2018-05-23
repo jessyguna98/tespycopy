@@ -29,7 +29,7 @@ def webhook():
     print('Action: ' + action)
     print('Response: ' + res)
 
-    req['queryResult']['outputContexts']['name'] = outputContexts
+    # req['queryResult']['outputContexts']['name'] = outputContexts
     return make_response(jsonify({'fulfillmentText': res,'outputContexts':req['queryResult']['outputContexts']}))
 
 def is_valid_doctor(req):
