@@ -23,6 +23,8 @@ def webhook():
     outputContexts = ""
     if action == 'isValidDoctor':
         res, outputContexts = is_valid_doctor(req)
+        req['queryResult']['outputContexts']['name'] = outputContexts
+
     else:
         log.error('Unexpected action.')
 
@@ -34,7 +36,8 @@ def webhook():
 
 def is_valid_doctor(req):
 
-    outputContexts=""
+    outputContexts = req['queryResult']['outputContexts']['name']
+
     date1 = req['queryResult']['parameters']['date']
     date1 = ''.join(date1)
     date1 = date1[:10]
@@ -46,12 +49,14 @@ def is_valid_doctor(req):
     # d2 = datetime.strptime(now, '%Y-%m-%d')
 
 
-
     doctor_name = req['queryResult']['parameters']['doctor_name']
     doctor_name = ''.join(doctor_name)
 
 
     doctor_name = doctor_name.strip().title()
+    doctor_name = doctor_name.replace("Dr. ","")
+    doctor_name = doctor_name.replace("dr ","")
+    doctor_name = doctor_name.replace("Dr ","")
 
 
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
