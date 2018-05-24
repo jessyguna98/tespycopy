@@ -50,6 +50,15 @@ def select_doctor(req):
     select_cur = conn.cursor()
 
     doctor_name = req['queryResult']['outputContexts'][0]['parameters']['doctor_name']
+    doctor_name = ''.join(doctor_name)
+
+
+    doctor_name = doctor_name.strip().title()
+
+    doctor_name = doctor_name.replace("Dr. ","")
+    doctor_name = doctor_name.replace("dr ","")
+    doctor_name = doctor_name.replace("Dr ","")
+
     doctor_number = int(req['queryResult']['parameters']['number-integer'])
     # doctor_number = doctor_number - 1
 
