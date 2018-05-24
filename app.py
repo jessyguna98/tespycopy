@@ -73,7 +73,7 @@ def select_doctor(req):
     response = "Invalid Choice!"
 
     if doctor_number > 0 and doctor_number <= len (doctor_list):
-        doctor_number = doctor_number
+        doctor_number = doctor_number - 1
         doctor_name = doctor_list[doctor_number]
 
         date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date']
