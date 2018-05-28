@@ -77,7 +77,6 @@ def select_doctor(req):
             doctor_id = str(row[1])
         i += 1
 
-    response = "Invalid Choice!"
 
     # if doctor_number > 0 and doctor_number <= len (doctor_list):
         # doctor_number = doctor_number - 1
@@ -91,7 +90,7 @@ def select_doctor(req):
     time_of_app = datetime[11:19]
 
     cur.execute("SELECT * from Appointments where App_Date ='"+date_of_app+"' AND App_Time = '"+time_of_app+"' AND Doctor_ID='"+doctor_id+"' ")
-    if_doc_busy_rows = select_cur.fetchall()
+    if_doc_busy_rows = cur.fetchall()
 
     if len(if_doc_busy_rows) < 1:
         cur.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
@@ -154,7 +153,7 @@ def is_valid_doctor(req):
     if len(rows) ==1:
 
         cur.execute("SELECT * from Appointments where App_Date ='"+date_of_app+"' AND App_Time = '"+time_of_app+"' AND Doctor_ID='"+doctor_id+"' ")
-        if_doc_busy_rows = select_cur.fetchall()
+        if_doc_busy_rows = cur.fetchall()
 
         if len(if_doc_busy_rows) < 1:
             cur.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
