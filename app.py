@@ -30,6 +30,9 @@ def webhook():
     elif action == 'SelectDoctor':
         res = select_doctor(req)
 
+    elif action == 'Check_Sickness.Check_Sickness-yes':
+        res = display_doctor_from_dept(req)
+
     else:
         log.error('Unexpected action.')
 
@@ -40,6 +43,35 @@ def webhook():
     return make_response(jsonify({'fulfillmentText': res, 'outputContexts':req['queryResult']['outputContexts']}))
                         #,'outputContexts': [{'name': "chooseDoctor"}]
 
+def display_doctor_from_dept(req):
+    dept_name = req['queryResult']['outputContexts'][0]['parameters']['disease_name']
+    disease_name = req['queryResult']['outputContexts'][0]['parameters']['disease_name.original']
+
+    conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
+    cur = conn.cursor()
+    doc_cur = conn.cursor()
+
+    cur.execute("SELECT department_id from department where department_name = '"+ dept_name+"';")
+    rows = cur.fetchall()
+
+    for row in rows:
+        dept_id = str(row[0])
+
+    response = "Found these doctors that specialize in treating your sickness\n"
+
+    doc_cur.execute("SELECT doc_name from doc_list where department_id = '"+dept_id+"' ; ")
+    row = cur.fetchall()
+
+    doctor_number=0                     #For the user to select from list of doctors
+
+    for row in rows:
+        doctor_number+=1
+        response = response + str(doctor_number)  + ". Dr." + str(row[0]) + " of " + dept_name + ",\n"
+
+    response += "\n Please Choose by Number"
+
+    conn.close()
+    return response
 
 
 def select_doctor(req):
