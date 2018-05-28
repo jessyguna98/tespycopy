@@ -41,9 +41,6 @@ def webhook():
                         #,'outputContexts': [{'name': "chooseDoctor"}]
 
 
-def check_doc_free(arg):
-
-
 
 def select_doctor(req):
 
@@ -88,12 +85,13 @@ def select_doctor(req):
         # doctor_name = doctor_list[doctor_number]
         # doc_id  = doctor_list[doctor_number]
 
-    date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date']
+    date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date-time']['date_time']
     date_of_app = ''.join(date_of_app)
-    date_of_app = date_of_app[:10]
+    date = date_of_app[:10]
+    time = date_of_app[12:18]
 
 
-    cur.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date_of_app+" ');")
+    cur.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date+" ','"+time+"');")
     response = "Successfully booked with "+doctor_name+"!"
 
     conn.commit()
@@ -104,10 +102,10 @@ def is_valid_doctor(req):
 
     outputContexts=""
     # outputContexts = req['queryResult']['outputContexts']['name']
-
-    date1 = req['queryResult']['parameters']['date']
-    date1 = ''.join(date1)
-    date1 = date1[:10]
+    datetime = req['queryResult']['parameters']['date-time']['date_time']
+    datetime = ''.join(date1)
+    date = datetime[:10]
+    time = datetime[12:18]
 
     # d1 = datetime.strptime(date1, '%Y-%m-%d')
     # # day_string = d1.strftime('%Y-%m-%d')
@@ -144,7 +142,7 @@ def is_valid_doctor(req):
 
 
     if len(rows) ==1:
-        cur2.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date1+" ');")
+        cur2.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date+" ','"+time+"');")
         # cur2.execute("INSERT INTO Appointments values('Zxcvb','2018-06-30');")
         response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date1
 
