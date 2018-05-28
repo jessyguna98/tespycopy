@@ -85,7 +85,7 @@ def select_doctor(req):
         # doctor_name = doctor_list[doctor_number]
         # doc_id  = doctor_list[doctor_number]
 
-    date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date-time']['date_time']
+    date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date-time']
     date_of_app = ''.join(date_of_app)
     date = date_of_app[:10]
     time = date_of_app[12:18]
@@ -102,7 +102,7 @@ def is_valid_doctor(req):
 
     outputContexts=""
     # outputContexts = req['queryResult']['outputContexts']['name']
-    datetime = req['queryResult']['parameters']['date-time']['date_time']
+    datetime = req['queryResult']['parameters']['date-time']
     datetime = ''.join(date1)
     date = datetime[:10]
     time = datetime[12:18]
