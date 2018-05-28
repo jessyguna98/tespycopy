@@ -88,7 +88,7 @@ def select_doctor(req):
     datetime = req['queryResult']['outputContexts'][0]['parameters']['date-time']['date_time']
     datetime = ''.join(datetime)
     date_of_app = datetime[:10]
-    time_of_app = datetime[12:19]
+    time_of_app = datetime[11:19]
 
 
     cur.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
@@ -105,7 +105,7 @@ def is_valid_doctor(req):
     datetime = req['queryResult']['parameters']['date-time']['date_time']
     datetime = ''.join(datetime)
     date_of_app = datetime[:10]
-    time_of_app = datetime[12:19]
+    time_of_app = datetime[11:19]
 
     # d1 = datetime.strptime(date1, '%Y-%m-%d')
     # # day_string = d1.strftime('%Y-%m-%d')
