@@ -41,10 +41,16 @@ def webhook():
                         #,'outputContexts': [{'name': "chooseDoctor"}]
 
 
+def check_doc_free(arg):
+
+
 
 def select_doctor(req):
 
     doctor_list = []
+    doctor_id_list = []
+
+
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
     cur = conn.cursor()
     select_cur = conn.cursor()
@@ -63,26 +69,32 @@ def select_doctor(req):
     # doctor_number = doctor_number - 1
 
 
-    select_cur.execute("SELECT doc_name from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
+    select_cur.execute("SELECT doc_name, doc_id from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
     rows = select_cur.fetchall()
 
+    i = 0
     for row in rows:
-        doctor_list.append(str(row[0]))
 
+        if i  == doctor_number - 1:
+            doctor_name = str(row[0]))
+            doctor_id = int(row[1])
+        i += 1
 
     response = "Invalid Choice!"
 
-    if doctor_number > 0 and doctor_number <= len (doctor_list):
-        doctor_number = doctor_number - 1
-        doctor_name = doctor_list[doctor_number]
+    # if doctor_number > 0 and doctor_number <= len (doctor_list):
+        # doctor_number = doctor_number - 1
 
-        date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date']
-        date_of_app = ''.join(date_of_app)
-        date_of_app = date_of_app[:10]
+        # doctor_name = doctor_list[doctor_number]
+        # doc_id  = doctor_list[doctor_number]
+
+    date_of_app = req['queryResult']['outputContexts'][0]['parameters']['date']
+    date_of_app = ''.join(date_of_app)
+    date_of_app = date_of_app[:10]
 
 
-        cur.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date_of_app+" ');")
-        response = "Successfully booked with "+doctor_name+"!"
+    cur.execute("INSERT INTO Appointments values(' "+doctor_name+" ',' "+date_of_app+" ');")
+    response = "Successfully booked with "+doctor_name+"!"
 
     conn.commit()
     conn.close()
