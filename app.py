@@ -60,7 +60,7 @@ def display_doctor_from_dept(req):
     response = "Found these doctors that specialize in treating your sickness\n"
 
     doc_cur.execute("SELECT doc_name from doc_list where department_id = '"+dept_id+"' ; ")
-    row = cur.fetchall()
+    row = doc_cur.fetchall()
 
     doctor_number=0                     #For the user to select from list of doctors
 
