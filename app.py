@@ -74,7 +74,7 @@ def select_doctor(req):
 
         if i  == doctor_number - 1:
             doctor_name = str(row[0])
-            doctor_id = int(row[1])
+            doctor_id = str(row[1])
         i += 1
 
     response = "Invalid Choice!"
@@ -137,7 +137,7 @@ def is_valid_doctor(req):
 
     for row in rows:
         doctor_name = str(row[0])
-        doctor_id = int(row[2])
+        doctor_id = str(row[2])
 
     response = "Invalid Choice!"
     #conn.close()
