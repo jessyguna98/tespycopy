@@ -113,7 +113,6 @@ def is_valid_doctor(req):
     # now = datetime.now()
     # d2 = datetime.strptime(now, '%Y-%m-%d')
 
-
     doctor_name = req['queryResult']['parameters']['doctor_name']
     doctor_name = ''.join(doctor_name)
 
@@ -133,8 +132,14 @@ def is_valid_doctor(req):
 
     response = "Found these results: \nWhich Doctor where you looking for?\n"
 
-    cur.execute("SELECT doc_name, department_id from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
+    cur.execute("SELECT doc_name, department_id, doc_id from doc_list where doc_name LIKE '%"+ doctor_name+"%';")
     rows = cur.fetchall()
+
+    for row in rows:
+        doctor_name = str(row[0]))
+        doctor_id = int(row[1])
+
+    response = "Invalid Choice!"
     #conn.close()
 
     # conn2 = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
