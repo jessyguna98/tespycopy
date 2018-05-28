@@ -33,6 +33,9 @@ def webhook():
     elif action == 'Check_Sickness.Check_Sickness-yes':
         res = display_doctor_from_dept(req)
 
+    elif action == 'Check_Sickness.Check_Sickness-yes.Check_Sickness-yes-custom':
+        res = select_doctor_dept(req)
+
     else:
         log.error('Unexpected action.')
 
@@ -43,7 +46,9 @@ def webhook():
     return make_response(jsonify({'fulfillmentText': res, 'outputContexts':req['queryResult']['outputContexts']}))
                         #,'outputContexts': [{'name': "chooseDoctor"}]
 
+
 def display_doctor_from_dept(req):
+
     dept_name = req['queryResult']['outputContexts'][0]['parameters']['disease_name']
     disease_name = req['queryResult']['outputContexts'][0]['parameters']['disease_name.original']
 
@@ -76,10 +81,6 @@ def display_doctor_from_dept(req):
 
 def select_doctor(req):
 
-    doctor_list = []
-    doctor_id_list = []
-
-
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
     cur = conn.cursor()
     select_cur = conn.cursor()
@@ -110,12 +111,6 @@ def select_doctor(req):
         i += 1
 
 
-    # if doctor_number > 0 and doctor_number <= len (doctor_list):
-        # doctor_number = doctor_number - 1
-
-        # doctor_name = doctor_list[doctor_number]
-        # doc_id  = doctor_list[doctor_number]
-
     datetime = req['queryResult']['outputContexts'][0]['parameters']['date-time']['date_time']
     datetime = ''.join(datetime)
     date_of_app = datetime[:10]
@@ -133,6 +128,62 @@ def select_doctor(req):
     conn.commit()
     conn.close()
     return response
+
+
+def select_doctor_dept(req):
+
+    conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
+    select_cur = conn.cursor()
+    cur = conn.cursor()
+    cur_check_appointment = conn.cursor()
+    cur_insert_appointment = conn.cursor()
+
+    doctor_number = int(req['queryResult']['parameters']['number-integer'])
+    dept_name = req['queryResult']['outputContexts'][0]['parameters']['disease_name']
+
+    cur.execute("SELECT department_id from department where department_name = '"+ dept_name+"';")
+    rows = cur.fetchall()
+
+    for row in rows:
+        dept_id = str(row[0])
+
+
+    select_cur.execute("SELECT doc_name,doc_id from doc_list where department_id = '"+dept_id+"' ; ")
+    rows = select_cur.fetchall()
+
+    i = 0
+    for row in rows:
+
+        if i  == doctor_number - 1:
+            doctor_name = str(row[0])
+            doctor_id = str(row[1])
+        i += 1
+
+
+    # if doctor_number > 0 and doctor_number <= len (doctor_list):
+        # doctor_number = doctor_number - 1
+
+        # doctor_name = doctor_list[doctor_number]
+        # doc_id  = doctor_list[doctor_number]
+
+    datetime = req['queryResult']['parameters']['date-time']['date_time']
+    datetime = ''.join(datetime)
+    date_of_app = datetime[:10]
+    time_of_app = datetime[11:19]
+
+    cur_check_appointment.execute("SELECT * from Appointments where App_Date ='"+date_of_app+"' AND App_Time = '"+time_of_app+"' AND Doctor_ID='"+doctor_id+"' ")
+    if_doc_busy_rows = cur_check_appointment.fetchall()
+
+    if len(if_doc_busy_rows) < 1:
+        cur_insert_appointment.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
+        response = "Successfully booked with "+doctor_name+" on "+date_of_app+" at "+time_of_app
+    else:
+        response = "I'm sorry. "+doctor_name+" seems to be busy at that time."
+
+    conn.commit()
+    conn.close()
+    return response
+
 
 def is_valid_doctor(req):
 
