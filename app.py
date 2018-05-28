@@ -73,7 +73,7 @@ def select_doctor(req):
     for row in rows:
 
         if i  == doctor_number - 1:
-            doctor_name = str(row[0]))
+            doctor_name = str(row[0])
             doctor_id = int(row[1])
         i += 1
 
