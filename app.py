@@ -90,9 +90,14 @@ def select_doctor(req):
     date_of_app = datetime[:10]
     time_of_app = datetime[11:19]
 
+    cur.execute("SELECT * from Appointments where App_Date ='"+date_of_app+"' AND App_Time = '"+time_of_app+"' AND Doctor_ID='"+doctor_id+"' ")
+    if_doc_busy_rows = = select_cur.fetchall()
 
-    cur.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
-    response = "Successfully booked with "+doctor_name+"!"
+    if len(if_doc_busy_rows) < 1:
+        cur.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
+        response = "Successfully booked with "+doctor_name+" on "+date_of_app+" at "+time_of_app
+    else:
+        response = "I'm sorry. "+doctor_name+" seems to be busy at that time."
 
     conn.commit()
     conn.close()
@@ -147,9 +152,15 @@ def is_valid_doctor(req):
 
 
     if len(rows) ==1:
-        cur2.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
-        # cur2.execute("INSERT INTO Appointments values('Zxcvb','2018-06-30');")
-        response = "Successfully booked an appointment with Dr. " +doctor_name+ " on " +date_of_app+ " at " +time_of_app
+
+        cur.execute("SELECT * from Appointments where App_Date ='"+date_of_app+"' AND App_Time = '"+time_of_app+"' AND Doctor_ID='"+doctor_id+"' ")
+        if_doc_busy_rows = = select_cur.fetchall()
+
+        if len(if_doc_busy_rows) < 1:
+            cur.execute("INSERT INTO Appointments(Doctor_ID, App_Date, App_Time) values(' "+doctor_id+" ',' "+date_of_app+" ','"+time_of_app+"');")
+            response = "Successfully booked with "+doctor_name+" on "+date_of_app+" at "+time_of_app
+        else:
+            response = "I'm sorry. "+doctor_name+" seems to be busy at that time."
 
         # if d1>d2:
         #     cur2.execute("INSERT INTO Appointments values('Qwerty','2018-05-30');")
