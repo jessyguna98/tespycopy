@@ -67,6 +67,9 @@ def display_doctor_from_dept(req):
 
     doctor_number=0                     #For the user to select from list of doctors
 
+    if len(rows) == 0:
+        return ":-("
+
     for row in rows:
         doctor_number+=1
         response = response + str(doctor_number)  + ". Dr." + str(row[0]) + " of " + dept_name + ",\n"
@@ -193,6 +196,7 @@ def is_valid_doctor(req):
     conn = psycopg2.connect(database = "db0ntdu7buk51i", user = "tibwcqkplwckqf", password = "9cfed858b1d9206afb594c1c5cfacc5952b2fc21d440501daa3af5efd694313c", host = "ec2-107-20-249-68.compute-1.amazonaws.com", port = "5432")
     cur = conn.cursor()
     dept_cursor = conn.cursor()
+    match_cursor = conn.cursor()
 
     response = "Found these results: \nWhich Doctor where you looking for?\n"
 
@@ -230,6 +234,16 @@ def is_valid_doctor(req):
 
     elif len(rows)==0:
         response = "Sorry! I couldn't find any doctor with that name."
+        all_doctors = []
+
+        match_cursor.execute("SELECT doc_name from doc_list;")
+        all_rows = match_cursor.fetchall()
+        for row in rows:
+            all_doctors.append(row[0])
+
+        best_match=sorted(a, key=lambda x: difflib.SequenceMatcher(None, x, b).ratio(), reverse=True)
+
+        response = response + "\nBest match for that name is Dr. " + best_match[0]
 
     conn.commit()
     conn.close()
