@@ -68,7 +68,8 @@ def display_doctor_from_dept(req):
     doctor_number=0                     #For the user to select from list of doctors
 
     if len(rows) == 0:
-        return ":-("
+        response +="\n Cannot find doctors for that speciality"
+        return response
 
     for row in rows:
         doctor_number+=1
