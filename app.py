@@ -238,7 +238,7 @@ def is_valid_doctor(req):
 
         match_cursor.execute("SELECT doc_name from doc_list;")
         all_rows = match_cursor.fetchall()
-        for row in rows:
+        for row in all_rows:
             all_doctors.append(row[0])
 
         best_match=sorted(a, key=lambda x: difflib.SequenceMatcher(None, x, b).ratio(), reverse=True)
