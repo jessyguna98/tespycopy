@@ -241,7 +241,7 @@ def is_valid_doctor(req):
         for row in all_rows:
             all_doctors.append(row[0])
 
-        best_match=sorted(a, key=lambda x: difflib.SequenceMatcher(None, x, b).ratio(), reverse=True)
+        best_match=sorted(all_doctors, key=lambda x: difflib.SequenceMatcher(None, x, doctor_name).ratio(), reverse=True)
 
         response = response + "\nBest match for that name is Dr. " + best_match[0]
 
