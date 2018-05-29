@@ -1,6 +1,7 @@
 import json
 from flask import Flask, request, make_response, jsonify
 import psycopg2
+import difflib
 
 app = Flask(__name__)
 log = app.logger
