@@ -1,0 +1,103 @@
+CREATE TABLE dbo.DateDimension
+(
+  [Date]                      DATE PRIMARY KEY,
+  [DayOfWeek_Number]          TINYINT,
+  [DayOfWeek_Name]            VARCHAR(9),
+  [DayOfWeek_ShortName]       VARCHAR(3),
+  [Week_Number]               TINYINT,
+  [Fiscal_DayOfMonth]         TINYINT,
+  [Fiscal_Month_Number]       TINYINT,
+  [Fiscal_Month_Name]         VARCHAR(12),
+  [Fiscal_Month_ShortName]    VARCHAR(3),
+  [Fiscal_Quarter]            TINYINT,     
+  [Fiscal_Year]               SMALLINT,
+  [Calendar_DayOfMonth]       TINYINT,
+  [Calendar_Month Number]     TINYINT,     
+  [Calendar_Month_Name]       VARCHAR(9),
+  [Calendar_Month_ShortName]  VARCHAR(3),
+  [Calendar_Quarter]          TINYINT,
+  [Calendar_Year]             SMALLINT, 
+  [IsLeapYear]                BIT,
+  [IsWeekDay]                 BIT,
+  [IsWeekend]                 BIT,
+  [IsWorkday]                 BIT,
+  [IsHoliday]                 BIT,
+  [HolidayName]               VARCHAR(255)
+);
+
+-- these are important:
+SET LANGUAGE US_ENGLISH;
+SET DATEFIRST 7;
+
+DECLARE @start DATE = '20150101', @years TINYINT = 10;
+
+;WITH src AS
+(
+  -- you don't need a function for this...
+  SELECT TOP (DATEDIFF(DAY, @start, DATEADD(YEAR, @years, @start)))
+    d = DATEADD(DAY, ROW_NUMBER() OVER (ORDER BY s1.number)-1, @start)
+   FROM master.dbo.spt_values AS s1
+   CROSS JOIN master.dbo.spt_values AS s2
+   -- your own numbers table works much better here, but this'll do
+),
+w AS 
+(
+  SELECT d, 
+    wd      = DATEPART(WEEKDAY,d), 
+    wdname  = DATENAME(WEEKDAY,d), 
+    wnum    = DATEPART(ISO_WEEK,d),
+    qnum    = DATEPART(QUARTER, d),
+    y       = YEAR(d),
+    m       = MONTH(d),
+    mname   = DATENAME(MONTH,d),
+    md      = DAY(d)
+  FROM src
+),
+q AS
+(
+  SELECT *, 
+    wdsname   = LEFT(wdname,3),
+    msname    = LEFT(mname,3),
+    IsWeekday = CASE WHEN wd IN (1,7) THEN 0 ELSE 1 END,
+    fq1 = DATEADD(DAY,25,DATEADD(MONTH,2,DATEADD(YEAR,YEAR(d)-1900,0)))
+  FROM w
+),
+q1 AS
+(
+  SELECT *, 
+    -- useless, just inverse of IsWeekday, but okay:
+    IsWeekend = CASE WHEN IsWeekday = 1 THEN 0 ELSE 1 END,
+    fq = COALESCE(NULLIF(DATEDIFF(QUARTER,DATEADD(DAY,6,fq1),d) 
+         + CASE WHEN md >= 26 AND m%3 = 0 THEN 2 ELSE 1 END,0),4)
+    FROM q
+)
+--INSERT dbo.DimWithDateAllPersisted(Date)
+INSERT INTO [dbo].[DateDimension]
+SELECT 
+  DateKey = d,
+  DayOfWeek_Number = wd,
+  DayOfWeek_Name = wdname,
+  DayOfWeek_ShortName = wdsname,
+  Week_Number = wnum,
+  -- I'll update these four lines when I have usable info
+  Fiscal_DayOfMonth      = 0,--'?magic?',
+  Fiscal_Month_Number    = 0,--'?magic?',
+  Fiscal_Month_Name      = 0,--'?magic?',
+  Fiscal_Month_ShortName = 0,--'?magic?',
+  Fiscal_Quarter = fq,
+  Fiscal_Year = CASE WHEN fq = 4 AND m < 3 THEN y-1 ELSE y END,
+  Calendar_DayOfMonth = md,
+  Calendar_Month_Number = m,
+  Calendar_Month_Name = mname,
+  Calendar_Month_ShortName = msname,
+  Calendar_Quarter = qnum,
+  Calendar_Year = y,
+  IsLeapYear = CASE 
+    WHEN (y%4 = 0 AND y%100 != 0) OR (y%400 = 0) THEN 1 ELSE 0 END,
+  IsWeekday,
+  IsWeekend,
+  IsWorkday = CASE WHEN IsWeekday = 1 THEN 1 ELSE 0 END,
+  IsHoliday = 0,
+  HolidayName = ''
+FROM q1;
+
